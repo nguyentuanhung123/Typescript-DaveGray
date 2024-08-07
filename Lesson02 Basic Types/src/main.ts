@@ -15,3 +15,5 @@ const sum = (a: number, b: string) => {
 let postId: string | number; // Union Types
 let isActive: number | boolean; // Union Types
 
+let re: RegExp = /\w+/g
+
