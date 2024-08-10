@@ -298,3 +298,195 @@ const addAll = (a: number, b: number, c?: number) => {
   }
 }
 ```
+
+## Trong TypeScript, assertion là một cơ chế cho phép bạn "bảo đảm" cho TypeScript biết rằng một giá trị có kiểu cụ thể mà bạn biết chắc chắn. Điều này thường được sử dụng khi bạn cần phải chỉ định kiểu của giá trị mà TypeScript không thể suy luận một cách chính xác. Dưới đây là các loại assertion trong TypeScript và cách sử dụng chúng.
+
+1. Type Assertion
+- Type assertion cho phép bạn nói với TypeScript về kiểu của giá trị mà bạn biết chắc chắn. Có hai cú pháp để thực hiện type assertion:
+
+- Cú pháp 1: as
+```ts
+let someValue: any = "This is a string";
+let strLength: number = (someValue as string).length;
+```
+
+- Cú pháp 2: <>
+```ts
+let someValue: any = "This is a string";
+let strLength: number = (<string>someValue).length;
+```
+
+- as là cú pháp được khuyến khích trong các dự án TypeScript, đặc biệt là trong các dự án sử dụng React (do sự tương thích với JSX).
+- <> là cú pháp cũ và có thể không hoạt động khi bạn sử dụng JSX.
+
+2. Non-null Assertion Operator
+
+- Khi bạn chắc chắn rằng một giá trị không phải là null hoặc undefined, bạn có thể sử dụng toán tử ! để thông báo với TypeScript.
+
+```ts
+let myValue: string | undefined = "Hello";
+let length: number = myValue!.length; // TypeScript không báo lỗi, vì bạn đảm bảo myValue không phải undefined
+```
+
+3. Assertions in Function Parameters
+- Đôi khi bạn cần chắc chắn rằng tham số trong hàm có một kiểu cụ thể, bạn có thể sử dụng assertions.
+
+```ts
+function processValue(value: unknown) {
+    if (typeof value === 'string') {
+        console.log((value as string).toUpperCase()); // Assertions để TypeScript biết value là string
+    }
+}
+```
+
+4. Type Assertions with DOM
+- Type assertions thường được sử dụng khi làm việc với các phần tử DOM, đặc biệt là khi bạn biết kiểu của phần tử.
+
+```ts
+let inputElement = document.querySelector('input') as HTMLInputElement;
+inputElement.value = "Hello, TypeScript!";
+```
+
+### Khi nào nên sử dụng assertions
+- Khi bạn chắc chắn về kiểu dữ liệu: Assertions nên được sử dụng khi bạn chắc chắn về kiểu dữ liệu của một biến nhưng TypeScript không suy luận đúng.
+- Khi làm việc với dữ liệu không được kiểm tra: Ví dụ, khi nhận dữ liệu từ các API bên ngoài hoặc thư viện không có kiểu rõ ràng.
+
+### Lưu ý khi sử dụng assertions
+- Sử dụng cẩn thận: Assertions bỏ qua kiểm tra kiểu của TypeScript, vì vậy nếu bạn không chắc chắn về kiểu, việc sử dụng assertions có thể dẫn đến lỗi runtime.
+- Chỉ sử dụng khi cần thiết: Sử dụng assertions khi bạn biết chắc chắn kiểu của giá trị và không có cách nào khác để TypeScript suy luận chính xác kiểu.
+
+```ts
+// Type Assertion
+let someValue: any = "Hello, TypeScript!";
+let strLength: number = (someValue as string).length;
+
+// Non-null Assertion
+let myValue: string | undefined = "TypeScript";
+let length: number = myValue!.length;
+
+// Function Parameter Assertion
+function printLength(value: unknown) {
+    if (typeof value === 'string') {
+        console.log((value as string).length);
+    }
+}
+
+// DOM Element Assertion
+let input = document.querySelector('input') as HTMLInputElement;
+input.value = "TypeScript with assertions!";
+```
+
+- Việc sử dụng type assertions giúp bạn kiểm soát các kiểu dữ liệu trong TypeScript, nhưng cũng cần phải sử dụng chúng một cách cẩn thận để tránh lỗi không mong muốn trong ứng dụng của bạn.
+
+## Khi bạn sử dụng document.querySelector('img'), TypeScript sẽ xác định kiểu của img là HTMLImageElement | null. Điều này có nghĩa là biến img có thể là một phần tử hình ảnh (HTMLImageElement) hoặc có thể là null nếu không tìm thấy phần tử phù hợp.
+
+```ts
+const img = document.querySelector('img');
+```
+
+### Xử lý với TypeScript
+
+1. Kiểm tra null:
+- Để tránh lỗi khi truy cập thuộc tính hoặc phương thức của img, bạn nên kiểm tra xem img có phải là null hay không trước khi sử dụng nó.
+
+```ts
+const img = document.querySelector('img');
+if (img !== null) {
+  img.src = 'path/to/image.jpg'; // Chỉ thực hiện nếu img không phải là null
+}
+```
+
+2. Sử dụng as để ép kiểu:
+- Nếu bạn chắc chắn rằng querySelector sẽ trả về một phần tử img, bạn có thể ép kiểu trực tiếp. Tuy nhiên, hãy cẩn thận khi làm điều này vì nếu không có phần tử img trong tài liệu, sẽ có lỗi.
+
+```ts
+const img = document.querySelector('img') as HTMLImageElement;
+img.src = 'path/to/image.jpg';
+```
+
+3. Sử dụng hàm getElementById hoặc getElementsByClassName nếu có ID hoặc class cụ thể:
+- Nếu bạn biết phần tử có ID hoặc class cụ thể, bạn có thể sử dụng các phương thức như getElementById hoặc getElementsByClassName để chọn phần tử đó. Điều này giúp tránh các vấn đề với việc chọn không chính xác phần tử.
+
+```ts
+const img = document.getElementById('myImage') as HTMLImageElement;
+img.src = 'path/to/image.jpg';
+```
+
+- Nhớ rằng việc kiểm tra và đảm bảo loại dữ liệu là rất quan trọng để tránh lỗi khi làm việc với DOM trong TypeScript.
+
+## Khi sử dụng let thay vì const trong khai báo biến, lý do chính thường liên quan đến việc thay đổi giá trị của biến sau khi nó được khởi tạo.
+- Sự khác biệt giữa let và const:
+1. let:
+- Có thể thay đổi giá trị: Biến khai báo bằng let có thể được gán lại giá trị mới nhiều lần.
+- Khả năng cập nhật: Nếu bạn dự đoán rằng giá trị của biến sẽ thay đổi sau khi khởi tạo, bạn nên sử dụng let.
+
+```ts
+let year: HTMLElement | null;
+year = document.getElementById("year");
+// Có thể gán lại year nếu cần
+year = document.getElementById("anotherYear");
+```
+
+2. const:
+- Không thể thay đổi giá trị: Biến khai báo bằng const phải được khởi tạo với một giá trị và không thể gán lại giá trị mới sau đó.
+- Không thể thay đổi tham chiếu: Đối với các đối tượng hoặc mảng, const không cho phép thay đổi tham chiếu nhưng có thể thay đổi nội dung bên trong.
+
+```ts
+const year: HTMLElement | null = document.getElementById("year");
+// Không thể gán lại year sau khi đã khởi tạo
+// year = document.getElementById("anotherYear"); // Lỗi: Cannot assign to 'year' because it is a constant
+```
+
+## Khi nào dùng let và khi nào dùng const:
+- Sử dụng const: Nếu biến không cần thay đổi giá trị sau khi khởi tạo. Điều này giúp bảo vệ giá trị của biến và làm cho mã của bạn dễ đọc hơn, vì bạn sẽ biết rằng giá trị đó không bị thay đổi.
+- Sử dụng let: Nếu biến có thể cần được gán lại giá trị khác trong suốt vòng đời của chương trình.
+
+## Ví dụ thực tiễn:
+- Nếu bạn đang chọn phần tử DOM và không chắc chắn nếu phần tử đó có thể thay đổi hoặc cần được cập nhật sau đó, việc sử dụng let là hợp lý. Ví dụ:
+
+```ts
+let year: HTMLElement | null = document.getElementById("year");
+// Có thể thay đổi year nếu cần
+year = document.getElementById("anotherYear");
+```
+
+- Ngược lại, nếu bạn biết rằng phần tử DOM sẽ không thay đổi và bạn không có kế hoạch thay đổi biến year, sử dụng const là sự lựa chọn tốt hơn.
+
+```ts
+const year: HTMLElement | null = document.getElementById("year");
+// Không thể thay đổi year sau đó
+```
+
+- Lựa chọn giữa let và const phụ thuộc vào cách bạn dự định sử dụng biến trong mã của bạn.
+
+## Khi khai báo một biến bằng const, bạn cần phải khởi tạo giá trị cho nó ngay lập tức. Nếu bạn khai báo một biến const mà không khởi tạo giá trị, bạn sẽ gặp lỗi biên dịch.
+
+- Ví dụ:
+1. Khai báo mà không khởi tạo (Sẽ gây lỗi):
+
+```ts
+const thisYear: string; // Lỗi: Variable 'thisYear' implicitly has an 'any' type.
+```
+
+2. Khai báo và khởi tạo đúng cách:
+
+```ts
+const thisYear: string = new Date().getFullYear().toString(); // Đúng
+```
+
+## Giải thích:
+- const yêu cầu khởi tạo: Khi bạn sử dụng const, bạn phải khởi tạo biến ngay lập tức. Nếu bạn không khởi tạo, TypeScript sẽ báo lỗi vì const không cho phép khai báo biến mà không có giá trị khởi tạo.
+
+- undefined không phải là giá trị mặc định: Nếu bạn khai báo một biến với const mà không khởi tạo giá trị, bạn sẽ nhận được lỗi biên dịch. undefined không được tự động gán cho biến khai báo bằng const.
+
+- Khởi tạo với giá trị: Nếu bạn khai báo biến với const, bạn cần gán giá trị cho nó ngay khi khai báo. Trong trường hợp của thisYear, bạn phải gán nó bằng một giá trị chuỗi hợp lệ.
+
+```ts
+const thisYear: string = new Date().getFullYear().toString(); // Khởi tạo ngay lập tức
+
+console.log(thisYear); // Ví dụ: '2024'
+```
+
+## Tổng kết:
+- Khi sử dụng const, bạn phải khởi tạo giá trị cho biến ngay lập tức. Nếu không khởi tạo, TypeScript sẽ báo lỗi và biến sẽ không có giá trị mặc định là undefined.
+
