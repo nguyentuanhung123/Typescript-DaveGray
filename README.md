@@ -490,3 +490,117 @@ console.log(thisYear); // Ví dụ: '2024'
 ## Tổng kết:
 - Khi sử dụng const, bạn phải khởi tạo giá trị cho biến ngay lập tức. Nếu không khởi tạo, TypeScript sẽ báo lỗi và biến sẽ không có giá trị mặc định là undefined.
 
+## Khởi tạo (initialization) là quá trình gán giá trị ban đầu cho một biến, thuộc tính của đối tượng, hoặc một tham số trong một hàm. Trong lập trình, việc khởi tạo là bước quan trọng để đảm bảo rằng các biến hoặc thuộc tính không chứa giá trị không xác định hoặc ngẫu nhiên khi chúng được sử dụng lần đầu tiên.
+
+- Các khái niệm liên quan đến khởi tạo:
+
+1. Khởi tạo biến:
+- Khi bạn khai báo một biến và gán cho nó một giá trị ngay lập tức, bạn đang thực hiện việc khởi tạo biến.
+
+```ts
+let age: number = 25; // Khởi tạo biến 'age' với giá trị 25
+```
+
+2. Khởi tạo thuộc tính đối tượng:
+- Trong các lớp (classes), bạn có thể khởi tạo thuộc tính của lớp thông qua constructor hoặc gán giá trị trực tiếp.
+
+```ts
+class Person {
+  name: string;
+  
+  constructor(name: string) {
+    this.name = name; // Khởi tạo thuộc tính 'name' qua constructor
+  }
+}
+
+const person = new Person("Alice"); // Khởi tạo đối tượng với giá trị cho 'name'
+```
+
+3. Khởi tạo tham số hàm:
+- Tham số của một hàm có thể được khởi tạo với giá trị mặc định.
+
+```ts
+function greet(name: string = "Guest") {
+  console.log(`Hello, ${name}!`); // Khởi tạo 'name' với giá trị mặc định "Guest"
+}
+
+greet(); // Output: Hello, Guest!
+```
+
+4. Khởi tạo mảng và đối tượng:
+- Khi bạn tạo mảng hoặc đối tượng, bạn có thể khởi tạo chúng với các giá trị cụ thể.
+
+```ts
+let numbers: number[] = [1, 2, 3]; // Khởi tạo mảng với các giá trị
+let person = { name: "Alice", age: 30 }; // Khởi tạo đối tượng với các thuộc tính
+```
+
+- Ví dụ về khởi tạo trong lớp:
+
+```ts
+class Coder {
+  secondLang: string;
+
+  constructor(
+    public readonly name: string, 
+    public music: string, 
+    private age: number, 
+    protected lang: string
+  ) {
+    // Khởi tạo thuộc tính 'secondLang' với giá trị mặc định
+    this.secondLang = "JavaScript";
+  }
+}
+```
+
+## Static
+
+```ts
+class Peeps {
+    static count: number = 0 // // Khai báo thuộc tính tĩnh 'count'
+
+    // Khai báo phương thức tĩnh 'getCount'
+    static getCount(): number {
+        return Peeps.count // Truy cập thuộc tính tĩnh 'count' từ phương thức tĩnh
+    }
+}
+```
+
+- Trong đoạn mã bạn đã cung cấp, bạn đang sử dụng các thành phần tĩnh (static) của lớp trong TypeScript. Đây là cách để quản lý và truy cập các thuộc tính và phương thức mà không cần phải tạo một đối tượng từ lớp.
+
+- Các điểm quan trọng:
+
+1. Thuộc tính tĩnh (static count):
+- static count: number = 0; khai báo một thuộc tính tĩnh count với giá trị mặc định là 0. Thuộc tính tĩnh thuộc về lớp, không phải về các đối tượng của lớp. Điều này có nghĩa là bạn có thể truy cập thuộc tính này mà không cần tạo một đối tượng của lớp Peeps.
+
+2. Phương thức tĩnh (static getCount()):
+- static getCount(): number { ... } khai báo một phương thức tĩnh getCount có thể được gọi trên lớp Peeps mà không cần một đối tượng. Phương thức này trả về giá trị của thuộc tính tĩnh count.
+
+## Cách sử dụng:
+- Bạn có thể gọi phương thức tĩnh và truy cập thuộc tính tĩnh của lớp mà không cần tạo đối tượng:
+
+```ts
+console.log(Peeps.getCount()); // Output: 0
+```
+
+## Thay đổi giá trị thuộc tính tĩnh:
+- Bạn có thể thay đổi giá trị của thuộc tính tĩnh từ bên ngoài lớp:
+
+```ts
+Peeps.count = 5; // Thay đổi giá trị của thuộc tính tĩnh 'count'
+console.log(Peeps.getCount()); // Output: 5
+```
+
+## Lưu ý:
+
+- Không thể truy cập thuộc tính tĩnh qua đối tượng: Các thuộc tính và phương thức tĩnh không thể được truy cập qua các đối tượng của lớp. Chúng chỉ có thể được truy cập qua tên lớp.
+
+```ts
+const p = new Peeps();
+console.log(p.getCount()); // Lỗi: 'getCount' là phương thức tĩnh và không thể được truy cập từ đối tượng
+```
+
+- Thay đổi giá trị tĩnh: Việc thay đổi giá trị của thuộc tính tĩnh sẽ ảnh hưởng đến tất cả các phương thức tĩnh và các lớp khác nếu lớp này được kế thừa, vì thuộc tính tĩnh là chung cho toàn bộ lớp.
+
+## Tổng kết: 
+- Sử dụng các thành phần tĩnh trong lớp là một cách hiệu quả để quản lý và truy cập dữ liệu hoặc phương thức không liên quan đến các đối tượng cụ thể của lớp đó. Bạn có thể sử dụng thuộc tính tĩnh để lưu trữ thông tin chung cho toàn bộ lớp và các phương thức tĩnh để thực hiện các hành động liên quan đến thông tin đó.
