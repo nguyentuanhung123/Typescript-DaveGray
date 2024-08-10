@@ -282,3 +282,19 @@ console.log(Grade.C); // 4
 console.log(Grade.B); // 5
 console.log(Grade.A); // 6
 ```
+
+### Lưu ý nhỏ : Nếu biến nào được thêm optional thì biến đó ngoài kiểu mặc định sẽ có thêm 1 kiểu là undifined
+
+- Ví dụ : c?: number => c: number | undefined
+
+- 'c' is possibly 'undefined'
+
+
+```ts
+const addAll = (a: number, b: number, c?: number) => {
+  // return a + b + c; // error
+  if(typeof c !== 'undefined'){
+    return a + b + c;
+  }
+}
+```
