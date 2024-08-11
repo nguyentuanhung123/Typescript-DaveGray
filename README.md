@@ -1102,3 +1102,178 @@ console.log(myIncomes.sidehustle); // 1500
 
 - Record<Keys, Type>: Một utility type rất hữu ích trong TypeScript để định nghĩa các đối tượng với các khóa cụ thể và kiểu giá trị cố định.
 - Chắc Chắn về Kiểu: Đảm bảo rằng các thuộc tính và kiểu giá trị được chỉ định một cách chính xác.
+
+## Generics
+
+- Generics trong TypeScript là một cách để viết mã linh hoạt hơn bằng cách cho phép các class, interface, hoặc function làm việc với nhiều loại dữ liệu khác nhau mà không cần phải chỉ định rõ loại dữ liệu đó ngay từ đầu.
+
+1. Giới thiệu về Generics
+- Generics cho phép bạn tạo ra các class, interface, hoặc function có thể hoạt động với bất kỳ loại dữ liệu nào mà bạn xác định khi sử dụng chúng. Điều này giúp bạn viết mã có thể tái sử dụng mà vẫn giữ được tính an toàn về loại dữ liệu.
+
+2. Cú pháp Generics
+
+## Generics trong Function
+
+- Bạn có thể định nghĩa một hàm với các loại dữ liệu chưa xác định trước, và chỉ định loại dữ liệu đó khi bạn gọi hàm. Ví dụ:
+
+```ts
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let output1 = identity<string>("Hello");
+let output2 = identity<number>(42);
+```
+
+- Trong ví dụ này, T là một kiểu dữ liệu tổng quát mà bạn định nghĩa khi gọi hàm.
+
+## Generics trong Class
+
+- Bạn cũng có thể sử dụng Generics trong các lớp để làm cho các lớp hoạt động với các kiểu dữ liệu khác nhau:
+
+```ts
+class Box<T> {
+  content: T;
+
+  constructor(content: T) {
+    this.content = content;
+  }
+}
+
+let stringBox = new Box<string>("A string");
+let numberBox = new Box<number>(123);
+```
+
+# Generics trong Interface
+
+- Generics cũng có thể được sử dụng trong các giao diện:
+
+```ts
+interface Pair<T, U> {
+  first: T;
+  second: U;
+}
+
+let pair: Pair<string, number> = { first: "Hello", second: 42 };
+```
+
+3. Ràng buộc Generics
+
+- Bạn có thể thêm các ràng buộc để giới hạn các loại dữ liệu mà Generics có thể nhận:
+
+```ts
+function lengthOf<T extends { length: number }>(arg: T): number {
+  return arg.length;
+}
+
+let len1 = lengthOf("Hello"); // Đúng
+let len2 = lengthOf([1, 2, 3]); // Đúng
+```
+
+- Trong ví dụ này, T phải là một loại dữ liệu có thuộc tính length.
+
+4. Generics với Default Values
+
+- Bạn cũng có thể cung cấp giá trị mặc định cho một Generic:
+
+```ts
+function wrap<T = string>(value: T): T {
+  return value;
+}
+
+let wrapped1 = wrap("Hello"); // Tự động nhận giá trị kiểu string
+let wrapped2 = wrap<number>(123); // Bạn cũng có thể chỉ định kiểu khác
+```
+
+- Generics là một công cụ mạnh mẽ để làm cho mã TypeScript của bạn linh hoạt và mạnh mẽ hơn, giữ cho nó an toàn về loại dữ liệu trong khi vẫn có thể hoạt động với nhiều kiểu dữ liệu khác nhau.
+
+## Giải thích ví dụ
+
+```ts
+const isObj = <T>(arg: T): boolean => {
+    return (
+        typeof arg === 'object' && !Array.isArray(arg) && arg !== null
+    )
+}
+```
+
+- Đoạn mã typeof arg === 'object' && !Array.isArray(arg) && arg !== null là một cách để kiểm tra xem một biến arg có phải là một đối tượng không phải là mảng và không phải là null hay không. Đây là cách kiểm tra để xác định liệu arg có phải là một đối tượng thông thường.
+
+## Giải thích từng phần:
+
+1. typeof arg === 'object':
+
+- Kiểm tra xem kiểu dữ liệu của arg có phải là 'object'. Trong JavaScript, cả đối tượng và mảng đều trả về 'object', vì vậy phần kiểm tra này không đủ để phân biệt giữa đối tượng và mảng.
+
+2. !Array.isArray(arg):
+
+- Xác minh rằng arg không phải là một mảng. Array.isArray(arg) sẽ trả về true nếu arg là một mảng, vì vậy việc sử dụng !Array.isArray(arg) đảm bảo rằng arg không phải là một mảng.
+
+3. arg !== null:
+
+- Đảm bảo rằng arg không phải là null, vì typeof null cũng trả về 'object', nhưng bạn muốn loại trừ null khỏi các đối tượng hợp lệ.
+
+## Tổng hợp:
+
+- Khi bạn kết hợp ba điều kiện này, bạn có thể xác định một cách chính xác nếu arg là một đối tượng thông thường:
+
+- Đối tượng (object) trong JavaScript không phải là mảng và không phải là null.
+
+```ts
+function isObject(arg) {
+  return typeof arg === 'object' && !Array.isArray(arg) && arg !== null;
+}
+
+console.log(isObject({})); // true
+console.log(isObject([])); // false
+console.log(isObject(null)); // false
+console.log(isObject(42)); // false
+console.log(isObject("string")); // false
+```
+
+- Cách kiểm tra này là hữu ích trong các tình huống mà bạn cần xác định chính xác kiểu của biến trước khi thao tác với nó.
+
+## Toán tử &&
+- Toán tử && (AND logic) trong JavaScript hoạt động như sau:
+
+- && (AND logic): Nếu tất cả các biểu thức được kết hợp bằng && đều trả về true, thì kết quả cuối cùng của biểu thức là true. Nếu bất kỳ một biểu thức nào trả về false, kết quả của toàn bộ biểu thức sẽ là false.
+
+```ts
+const a = 5;
+const b = 10;
+const c = 15;
+
+const result1 = a < b && b < c; // true && true => true
+const result2 = a > b && b < c; // false && true => false
+const result3 = a < b && b > c; // true && false => false
+```
+
+- Trong các ví dụ trên:
+
+- result1 là true vì cả hai biểu thức a < b và b < c đều đúng.
+- result2 là false vì biểu thức a > b là false, mặc dù b < c là true.
+- result3 là false vì biểu thức b > c là false, mặc dù a < b là true.
+
+## Tính chất Short-circuit
+
+- Toán tử && có tính chất "short-circuit" (ngắn mạch). Điều này có nghĩa là nếu một biểu thức trong chuỗi biểu thức && là false, JavaScript sẽ không kiểm tra các biểu thức còn lại vì kết quả đã rõ ràng là false.
+
+```ts
+function isPositiveNumber(num) {
+  return num > 0 && num < 100;
+}
+
+console.log(isPositiveNumber(50)); // true
+console.log(isPositiveNumber(-10)); // false
+console.log(isPositiveNumber(150)); // false
+```
+
+## Giải thích đoan code
+
+```ts
+const getUsersProperty = <T extends HasID, K extends keyof T>(users: T[], key: K): T[K][] => {
+    return users.map((user) => user[key]);
+}
+```
+
+- Hàm getUsersProperty mà bạn cung cấp là một hàm tổng quát trong TypeScript, được sử dụng để trích xuất một thuộc tính cụ thể từ tất cả các đối tượng trong một mảng. Dưới đây là giải thích chi tiết về từng phần của hàm:
