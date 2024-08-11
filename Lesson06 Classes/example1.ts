@@ -47,15 +47,19 @@ class Coder {
 // console.log(Dave); // Coder { name: 'Dave', music: 'Rock', age: 42, lang: 'TypeScript' }
 
 const Dave = new Coder('Dave', 'Rock', 42);
-
-console.log(Dave); // Coder { name: 'Dave', music: 'Rock', age: 42, lang: 'TypeScript' }
+console.log(Dave); // Coder { name: 'Dave', music: 'Rock', age: 42, lang: 'TypeScript'}
 console.log(Dave.name); // Dave
 console.log(Dave.music); // Rock
+Dave.secondLang = 'Java';
+console.log("Second language: " + Dave.secondLang); // Second language: Java
+
 
 // console.log(Dave.age); // Error: age is private (Vẫn hợp lệ của JavaScript và hiện trên tab Console)
 console.log(Dave.getAge()); // Hello, I'm 42!
 
 // console.log(Dave.lang); // Error: lang is protected (Vẫn hợp lệ của JavaScript và hiện trên tab Console)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class WebDev extends Coder {
     constructor(
@@ -64,7 +68,7 @@ class WebDev extends Coder {
         music: string, 
         age: number
     ) {
-        super(name, music, age)
+        super(name, music, age) // Gọi constructor của lớp cha 'Coder'
         this.computer = computer
     }
 
@@ -78,6 +82,8 @@ console.log(Sara.getLang()); // I write TypeScript
 // console.log(Sara.age); // Property 'age' is private and only accessible within class 'Coder'.
 // console.log(Sara.lang); // Property 'lang' is protected and only accessible within class 'Coder' and its subclasses.
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class PythonDev extends Coder {
     constructor(
         public computer: string, 
@@ -85,7 +91,7 @@ class PythonDev extends Coder {
         music: string, 
         age: number
     ) {
-        super(name, music, age, 'Python')
+        super(name, music, age, 'Python') // Gọi constructor của lớp cha 'Coder'
         this.computer = computer
     }
 
@@ -96,6 +102,54 @@ class PythonDev extends Coder {
 
 const Huy = new PythonDev('Mac', 'Huy', 'Lofi', 25);
 console.log(Huy.getLang()); // I write Python
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Có thể kế thừa lớp và truy cập thuộc tính protected
+class AdvancedCoder extends Coder {
+    public getLang(): string {
+        return this.lang; // Có thể truy cập 'lang' vì nó là protected
+    }
+}
+
+const advancedCoder = new AdvancedCoder('Bob', 'Jazz', 28);
+console.log(advancedCoder); // AdvancedCoder { name: 'Bob', music: 'Jazz', age: 28, lang: 'TypeScript' }
+console.log(advancedCoder.name); // Output: Bob
+console.log(advancedCoder.getLang()); // Output: TypeScript
+advancedCoder.secondLang = 'Ruby';
+console.log(advancedCoder.secondLang); // Output: Ruby
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class LowerCoder extends Coder {
+    public expertise: string; // Thêm thuộc tính 'expertise'
+    constructor(
+        name: string, 
+        music: string, 
+        age: number,
+        lang: string,
+        expertise: string // Thêm tham số 'expertise' vào constructor
+    ) {
+        super(name, music, age, lang); // Gọi constructor của lớp cha 'Coder'
+        this.expertise = expertise; // Khởi tạo thuộc tính 'expertise'
+    }
+
+    public getLang(): string {
+        return this.lang; // Có thể truy cập 'lang' vì nó là protected
+    }
+
+    public getDetails(): string {
+        return `Name: ${this.name}, Music: ${this.music}, Age: ${this.getAge()}, Lang: ${this.lang}, Expertise: ${this.expertise}`;
+    }
+}
+
+// Tạo đối tượng của lớp 'AdvancedCoder'
+const lowerCoder = new LowerCoder('Bob', 'Jazz', 28, 'JavaScript', 'AI and Machine Learning');
+
+console.log(lowerCoder.getLang()); // Output: JavaScript
+console.log(lowerCoder.getDetails()); // Output: Name: Bob, Music: Jazz, Age: Hello, I'm 28!, Lang: JavaScript, SecondLang: Ruby, Expertise: AI and Machine Learning
+
+
 
 
 

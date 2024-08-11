@@ -604,3 +604,501 @@ console.log(p.getCount()); // Lỗi: 'getCount' là phương thức tĩnh và kh
 
 ## Tổng kết: 
 - Sử dụng các thành phần tĩnh trong lớp là một cách hiệu quả để quản lý và truy cập dữ liệu hoặc phương thức không liên quan đến các đối tượng cụ thể của lớp đó. Bạn có thể sử dụng thuộc tính tĩnh để lưu trữ thông tin chung cho toàn bộ lớp và các phương thức tĩnh để thực hiện các hành động liên quan đến thông tin đó.
+
+## Index Signature
+
+- Index signatures trong TypeScript cho phép bạn định nghĩa các thuộc tính mà bạn không biết trước tên của chúng, nhưng bạn biết kiểu dữ liệu của chúng. Đây là cách để bạn có thể sử dụng các đối tượng như là các từ điển hoặc bảng băm (hash maps) trong TypeScript.
+
+## Cú pháp
+- Có hai loại index signatures: cho chỉ số là số (number) và cho chỉ số là chuỗi (string).
+
+## Index Signature với Chuỗi
+
+```ts
+interface StringDictionary {
+    [key: string]: number;
+}
+```
+
+- Trong ví dụ trên, StringDictionary định nghĩa một đối tượng mà bạn có thể truy cập các thuộc tính của nó bằng tên chuỗi (key), và giá trị của các thuộc tính đó sẽ luôn là số (number).
+
+## Index Signature với Số
+
+```ts
+interface NumberDictionary {
+    [index: number]: string;
+}
+```
+
+- Trong ví dụ trên, NumberDictionary định nghĩa một đối tượng mà bạn có thể truy cập các thuộc tính của nó bằng chỉ số số (index), và giá trị của các thuộc tính đó sẽ luôn là chuỗi (string).
+
+## Ví dụ
+- Dưới đây là một số ví dụ để minh họa cách sử dụng index signatures:
+
+## Ví dụ 1: Index Signature với Chuỗi
+
+```ts
+interface StringDictionary {
+    [key: string]: number;
+}
+
+const scores: StringDictionary = {
+    Alice: 85,
+    Bob: 92,
+    Charlie: 88
+};
+
+console.log(scores["Alice"]); // Output: 85
+console.log(scores["Bob"]);   // Output: 92
+console.log(scores.Charlie);   // Output: 88
+```
+
+## Ví dụ 2: Index Signature với Số
+
+```ts
+interface NumberDictionary {
+    [index: number]: string;
+}
+
+const names: NumberDictionary = ["Alice", "Bob", "Charlie"];
+
+console.log(names[0]); // Output: Alice
+console.log(names[1]); // Output: Bob
+```
+
+## Ví dụ 3: Sử dụng cả hai loại index signature
+
+```ts
+interface MixedDictionary {
+    [key: string]: string;  // Tất cả các thuộc tính dùng chuỗi làm key và có giá trị là chuỗi
+    [index: number]: string; // Tất cả các thuộc tính dùng số làm key và có giá trị là chuỗi
+}
+
+const mixed: MixedDictionary = {
+    "name": "Alice",
+    1: "Bob"
+};
+
+console.log(mixed["name"]); // Output: Alice
+console.log(mixed[1]);     // Output: Bob
+```
+
+## Quy tắc và lưu ý
+
+1. Chỉ số kiểu chuỗi và số:
+
+- Nếu bạn định nghĩa một index signature với chuỗi (string), bạn không thể định nghĩa một index signature với số (number) mà có kiểu khác. Trong thực tế, chỉ số kiểu số (number) là một dạng của chuỗi (string), vì vậy các giá trị thuộc tính kiểu số phải khớp với kiểu của các thuộc tính kiểu chuỗi nếu cả hai index signature được sử dụng.
+
+2. Chỉ số kiểu chuỗi thường:
+
+- Khi sử dụng index signature với chuỗi, TypeScript sẽ coi chỉ số kiểu số là chuỗi. Do đó, bạn thường sẽ chỉ cần định nghĩa index signature với chuỗi.
+
+3. Đối tượng có thể không có index signature:
+
+- Nếu bạn định nghĩa một index signature, các thuộc tính khác của đối tượng phải có kiểu dữ liệu tương thích với index signature.
+
+## Tóm tắt
+
+- Index signatures trong TypeScript cho phép bạn định nghĩa các thuộc tính của đối tượng với tên không xác định trước nhưng có kiểu dữ liệu nhất định. Chúng rất hữu ích khi làm việc với các cấu trúc dữ liệu như từ điển hoặc bảng băm, nơi mà tên thuộc tính có thể thay đổi nhưng kiểu dữ liệu của chúng là nhất quán.
+
+## Ở bài 7, ta có lỗi: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'TransactionObj'. No index signature with a parameter of type 'string' was found on type 'TransactionObj'.
+
+- Lỗi TypeScript này xảy ra khi bạn cố gắng sử dụng một chỉ số chuỗi để truy cập vào một thuộc tính của một đối tượng, nhưng kiểu đối tượng đó không có một index signature cho kiểu chuỗi. Để khắc phục lỗi này, bạn cần đảm bảo rằng kiểu đối tượng có định nghĩa một index signature cho kiểu chuỗi, hoặc bạn cần sử dụng kiểu chính xác của thuộc tính.
+
+## Ví Dụ về Vấn Đề
+- Giả sử bạn có một kiểu đối tượng như sau:
+
+```ts
+interface TransactionObj {
+  id: number;
+  amount: number;
+  date: string;
+}
+
+const transaction: TransactionObj = {
+  id: 1,
+  amount: 100,
+  date: '2024-08-10'
+};
+
+const property: string = 'amount';
+console.log(transaction[property]); // Lỗi: Element implicitly has an 'any' type...
+```
+
+## Nguyên Nhân : TransactionObj không có một index signature cho các thuộc tính kiểu chuỗi. TypeScript không biết rằng property sẽ là một khóa hợp lệ của TransactionObj, vì vậy nó báo lỗi.
+
+## Cách Khắc Phục
+
+1. Thêm Index Signature:
+
+- Nếu bạn muốn cho phép các thuộc tính truy cập bằng chuỗi, bạn có thể thêm một index signature vào kiểu đối tượng:
+
+```ts
+interface TransactionObj {
+  id: number;
+  amount: number;
+  date: string;
+  [key: string]: number | string; // Thêm index signature
+}
+
+const transaction: TransactionObj = {
+  id: 1,
+  amount: 100,
+  date: '2024-08-10'
+};
+
+const property: string = 'amount';
+console.log(transaction[property]); // OK
+```
+
+- Lưu ý rằng việc thêm index signature sẽ cho phép tất cả các thuộc tính kiểu chuỗi và giá trị kiểu number hoặc string. Hãy đảm bảo rằng điều này phù hợp với yêu cầu của bạn.
+
+2. Sử Dụng Kiểu Chính Xác:
+
+- Nếu bạn biết trước các thuộc tính của đối tượng, bạn có thể sử dụng kiểu của các thuộc tính cụ thể:
+
+```ts
+const property: keyof TransactionObj = 'amount'; // Đảm bảo 'property' là một khóa hợp lệ
+console.log(transaction[property]); // OK
+```
+
+- keyof TransactionObj sẽ cho phép property chỉ nhận các giá trị là các khóa hợp lệ của TransactionObj.
+
+3. Kiểm Tra và Xử Lý Vòng Lặp:
+
+- Nếu bạn cần truy cập thuộc tính động của đối tượng và không thể xác định trước các khóa hợp lệ, hãy chắc chắn rằng các thuộc tính bạn đang truy cập thực sự tồn tại trong đối tượng và xử lý các trường hợp không hợp lệ:
+
+```ts
+const property: string = 'amount';
+if (property in transaction) {
+  console.log(transaction[property as keyof TransactionObj]); // OK
+} else {
+  console.error('Property does not exist');
+}
+```
+
+## Tóm Tắt
+
+- Thêm Index Signature: Nếu bạn muốn cho phép các thuộc tính truy cập bằng chuỗi.
+- Sử Dụng Kiểu Chính Xác: Nếu bạn biết các thuộc tính hợp lệ và muốn đảm bảo an toàn kiểu.
+- Kiểm Tra Vòng Lặp: Để xử lý các thuộc tính động và đảm bảo rằng chúng tồn tại trong đối tượng.
+
+## Khi bạn sử dụng vòng lặp for...in để lặp qua các thuộc tính của một đối tượng trong TypeScript, kiểu của biến dùng để lặp (transaction trong trường hợp này) là kiểu string, vì for...in luôn trả về các khóa của đối tượng dưới dạng chuỗi. Điều này có thể dẫn đến lỗi khi bạn cố gắng truy cập giá trị của thuộc tính bằng cách sử dụng một kiểu không đúng.
+
+- Dưới đây là một ví dụ và cách khắc phục:
+
+## Ví Dụ về Vấn Đề
+- Giả sử bạn có một đối tượng transactions mà các thuộc tính của nó là các số, và bạn muốn tính tổng các giá trị:
+
+```ts
+interface Transactions {
+  [key: string]: number;
+}
+
+const transactions: Transactions = {
+  payment1: 100,
+  payment2: 200,
+  payment3: 300
+};
+
+let total = 0;
+
+for (const transaction in transactions) {
+  total += transactions[transaction]; // Lỗi: `transaction` là kiểu `string`, cần phải ép kiểu
+}
+```
+
+## Cách Khắc Phục
+
+1. Ép Kiểu Chính Xác:
+- Vì transaction là kiểu string, bạn cần ép kiểu nó thành một khóa hợp lệ của transactions để truy cập giá trị:
+
+```ts
+for (const transaction in transactions) {
+  total += transactions[transaction as keyof typeof transactions];
+}
+```
+
+- transaction as keyof typeof transactions đảm bảo rằng TypeScript hiểu rằng transaction là một khóa hợp lệ của đối tượng transactions.
+
+2. Sử Dụng Object.values:
+- Nếu bạn chỉ cần tính tổng các giá trị và không cần biết các khóa, bạn có thể sử dụng Object.values để lấy mảng các giá trị và tính tổng:
+
+```ts
+const values = Object.values(transactions);
+total = values.reduce((sum, value) => sum + value, 0);
+```
+
+- Object.values(transactions) trả về một mảng chứa tất cả các giá trị của đối tượng transactions.
+- reduce được sử dụng để tính tổng các giá trị trong mảng.
+
+## Ví Dụ Hoàn Chỉnh
+
+- Sử Dụng Ép Kiểu
+
+```ts
+interface Transactions {
+  [key: string]: number;
+}
+
+const transactions: Transactions = {
+  payment1: 100,
+  payment2: 200,
+  payment3: 300
+};
+
+let total = 0;
+
+for (const transaction in transactions) {
+  total += transactions[transaction as keyof typeof transactions];
+}
+
+console.log(total); // Output: 600
+```
+
+- Sử Dụng Object.values
+
+```ts
+interface Transactions {
+  [key: string]: number;
+}
+
+const transactions: Transactions = {
+  payment1: 100,
+  payment2: 200,
+  payment3: 300
+};
+
+const values = Object.values(transactions);
+const total = values.reduce((sum, value) => sum + value, 0);
+
+console.log(total); // Output: 600
+```
+
+## Tóm Tắt
+- Vòng Lặp for...in: Khi sử dụng, nhớ rằng biến lặp (transaction) có kiểu string. Cần ép kiểu khi truy cập giá trị của thuộc tính.
+- Sử Dụng Object.values: Đơn giản hơn khi chỉ cần tính tổng giá trị của các thuộc tính mà không cần quan tâm đến tên của chúng.
+
+## Giải thích rõ hơn về lỗi 
+
+```rust
+Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'TransactionObj'.
+No index signature with a parameter of type 'string' was found on type 'TransactionObj'.
+```
+
+- Điều này xảy ra vì TypeScript không nhận diện rằng thuộc tính có thể được truy cập bằng chuỗi. Để TypeScript chấp nhận việc truy cập thuộc tính bằng chuỗi, bạn cần đảm bảo rằng kiểu của đối tượng có định nghĩa một index signature cho kiểu chuỗi hoặc sử dụng các kỹ thuật khác để đảm bảo rằng bạn đang truy cập đúng thuộc tính.
+
+## Lý Do Phải Ép Kiểu
+
+1. Thiếu Index Signature
+
+- Nếu kiểu đối tượng của bạn không định nghĩa index signature cho chuỗi, TypeScript không cho phép bạn sử dụng chuỗi để truy cập các thuộc tính của đối tượng. Ví dụ:
+
+```ts
+interface TransactionObj {
+  id: number;
+  amount: number;
+  date: string;
+}
+
+const todaysTransactions: TransactionObj = {
+  id: 1,
+  amount: 100,
+  date: '2024-08-10'
+};
+
+// Lỗi: Không thể sử dụng chuỗi để truy cập thuộc tính của TransactionObj
+console.log(todaysTransactions['Pizza']); 
+```
+
+- Ở đây, todaysTransactions không có index signature cho kiểu chuỗi, nên TypeScript không cho phép bạn sử dụng 'Pizza' làm chỉ số.
+
+2. Sử Dụng keyof
+
+- Để truy cập thuộc tính của đối tượng một cách an toàn khi bạn biết trước các khóa, bạn có thể sử dụng keyof để chỉ định rõ các khóa hợp lệ:
+
+```ts
+const property: keyof TransactionObj = 'amount';
+console.log(todaysTransactions[property]); // OK
+```
+
+- Ở đây, property phải là một trong các khóa hợp lệ của TransactionObj (tức là 'id', 'amount', hoặc 'date').
+
+## Các Tình Huống Cần Ép Kiểu
+
+1. Truy Cập Thuộc Tính Động
+- Khi bạn làm việc với các thuộc tính động mà không biết trước tên chính xác, bạn cần phải có một cách để đảm bảo rằng TypeScript nhận diện chính xác kiểu dữ liệu của thuộc tính. Nếu bạn muốn sử dụng các thuộc tính động, có thể sử dụng index signature:
+
+```ts
+interface TransactionObj {
+  [key: string]: number | string; // Cho phép truy cập bằng chuỗi
+  id: number;
+  amount: number;
+  date: string;
+}
+
+const todaysTransactions: TransactionObj = {
+  id: 1,
+  amount: 100,
+  date: '2024-08-10'
+};
+
+console.log(todaysTransactions['amount']); // OK
+```
+
+- Ở đây, index signature [key: string]: number | string cho phép bạn sử dụng chuỗi để truy cập các thuộc tính, nhưng cũng cần đảm bảo rằng kiểu của các giá trị phù hợp.
+
+2. Chắc Chắn về Kiểu Dữ Liệu
+
+- Nếu bạn chắc chắn về kiểu dữ liệu, bạn có thể sử dụng ép kiểu để hướng dẫn TypeScript:
+
+```ts
+const property = 'amount' as keyof TransactionObj;
+console.log(todaysTransactions[property]); // OK
+```
+
+- property được ép kiểu thành keyof TransactionObj, đảm bảo rằng chỉ những khóa hợp lệ được sử dụng.
+
+## Tóm Tắt
+- Index Signature: Cung cấp khả năng truy cập các thuộc tính của đối tượng bằng chuỗi nếu kiểu đối tượng không có các khóa cố định.
+- keyof: Đảm bảo truy cập thuộc tính của đối tượng một cách chính xác khi biết trước các khóa hợp lệ.
+- Ép Kiểu: Hướng dẫn TypeScript hiểu rằng một biến có kiểu chính xác để tránh lỗi khi truy cập thuộc tính.
+
+## Nếu bạn thêm readonly vào index signature trong TypeScript, điều đó có nghĩa là các thuộc tính không thể bị thay đổi sau khi được gán giá trị lần đầu tiên. Đây là một cách để đảm bảo rằng các thuộc tính không thể được thay đổi, giúp bảo vệ tính bất biến của đối tượng.
+
+## Ví Dụ Với readonly Index Signature
+- Khi sử dụng readonly với index signature, bạn cho phép đối tượng có các thuộc tính có thể được truy cập qua chuỗi, nhưng không thể thay đổi giá trị của các thuộc tính đó sau khi được gán giá trị lần đầu tiên.
+
+```ts
+interface TransactionObj {
+  readonly [key: string]: number | string;
+  id: number;
+  amount: number;
+  date: string;
+}
+
+const todaysTransactions: TransactionObj = {
+  id: 1,
+  amount: 100,
+  date: '2024-08-10'
+};
+
+// Thử thêm thuộc tính mới
+todaysTransactions['Dave'] = 300; // Lỗi: Index signature in type 'TransactionObj' only permits reading.
+
+// Thử thay đổi thuộc tính đã có
+todaysTransactions['amount'] = 200; // Lỗi: Index signature in type 'TransactionObj' only permits reading.
+
+console.log(todaysTransactions['amount']); // 100
+```
+
+## Tóm Tắt
+
+- readonly Index Signature: Chỉ cho phép đọc giá trị của thuộc tính và ngăn chặn việc thay đổi giá trị sau khi được gán lần đầu tiên.
+- Sử Dụng: Khi bạn muốn bảo vệ tính bất biến của đối tượng hoặc các thuộc tính không được thay đổi sau khi đã được thiết lập.
+- Lỗi Khi Thay Đổi: Nếu bạn cố gắng thay đổi giá trị của thuộc tính đã được định nghĩa bằng readonly index signature, TypeScript sẽ báo lỗi.
+
+##  Trong TypeScript, cú pháp interface Incomes { [key: string | number]: number } không hoàn toàn chính xác và sẽ gây lỗi biên dịch. Đặc biệt, index signature trong TypeScript chỉ cho phép một loại chỉ số (chuỗi hoặc số) tại một thời điểm, không phải cả hai loại cùng một lúc.
+
+## Ví Dụ Không Hợp Lệ
+- Cú pháp interface Incomes { [key: string | number]: number } không hợp lệ vì:
+
+- TypeScript không hỗ trợ kết hợp string và number cho index signature trong một interface.
+- Bạn cần chọn giữa string hoặc number cho index signature.
+
+## Ví Dụ Chính Xác
+- Nếu bạn muốn cho phép các thuộc tính động với cả string và number, bạn có thể tạo hai interface khác nhau và kết hợp chúng nếu cần:
+
+```ts
+interface StringIndexIncomes {
+  [key: string]: number;
+}
+
+interface NumberIndexIncomes {
+  [key: number]: number;
+}
+
+type Incomes = StringIndexIncomes & NumberIndexIncomes;
+
+const incomes: Incomes = {
+  salary: 5000,
+  1: 2000,
+};
+```
+
+## Tóm Tắt
+
+- Index Signature: Bạn chỉ có thể sử dụng một loại chỉ số duy nhất, không phải cả string và number cùng một lúc.
+- Sử Dụng Đúng Cú Pháp: Chọn string hoặc number cho index signature và đảm bảo rằng đối tượng của bạn tuân theo định nghĩa kiểu.
+
+## Trong TypeScript, cú pháp interface Incomes { [key: 'salary']: number } không hợp lệ và sẽ dẫn đến lỗi biên dịch. Cú pháp này không đúng vì index signature không cho phép chỉ định cụ thể một tên thuộc tính như 'salary'.
+
+## Giải thích rõ hơn về 1 đoạn code của Typescript
+
+```ts
+type Streams = 'salary' | 'bonus' | 'sidehustle'
+
+type Incomes = Record<Streams, number>
+```
+
+- Cú pháp bạn sử dụng là hoàn toàn chính xác và là cách rất hiệu quả để định nghĩa các thuộc tính của một đối tượng trong TypeScript khi bạn biết trước các khóa cụ thể mà bạn muốn sử dụng.
+
+## Giải Thích
+
+1. type Streams = 'salary' | 'bonus' | 'sidehustle'
+
+- Đây là một kiểu union (Streams) mà chỉ cho phép các giá trị là 'salary', 'bonus', hoặc 'sidehustle'. Điều này giúp bạn chỉ định rõ ràng các khóa mà đối tượng của bạn có thể có.
+
+2. type Incomes = Record<Streams, number>
+
+- Record<K, T> là một utility type trong TypeScript mà tạo ra một đối tượng với các khóa kiểu K và các giá trị kiểu T. Trong trường hợp này:
+
+- K là kiểu Streams, tức là 'salary' | 'bonus' | 'sidehustle'.
+- T là kiểu number.
+
+- Kết quả là Incomes sẽ là một đối tượng với các khóa 'salary', 'bonus', và 'sidehustle', và các giá trị của chúng sẽ là kiểu number.
+
+## Ví dụ:
+
+```ts
+type Streams = 'salary' | 'bonus' | 'sidehustle';
+
+type Incomes = Record<Streams, number>;
+
+const myIncomes: Incomes = {
+  salary: 5000,
+  bonus: 2000,
+  sidehustle: 1500,
+};
+
+// Sử dụng đối tượng
+console.log(myIncomes.salary);     // 5000
+console.log(myIncomes.bonus);      // 2000
+console.log(myIncomes.sidehustle); // 1500
+```
+
+```ts
+type Streams = 'salary' | 'bonus' | 'sidehustle';
+
+type Incomes = Record<Streams, number | string>;
+
+const myIncomes: Incomes = {
+  salary: 5000,
+  bonus: '2000', // Có thể là string
+  sidehustle: 1500,
+};
+
+// Sử dụng đối tượng
+console.log(myIncomes.salary);     // 5000
+console.log(myIncomes.bonus);      // '2000'
+console.log(myIncomes.sidehustle); // 1500
+```
+
+## Lợi Ích Của Record
+- Chắc Chắn về Kiểu: Đảm bảo rằng tất cả các thuộc tính cần thiết ('salary', 'bonus', 'sidehustle') có mặt và có kiểu number.
+- Giảm Sai Sót: Ngăn chặn việc thêm các thuộc tính không mong muốn và giúp phát hiện lỗi khi bạn không cung cấp đủ các thuộc tính cần thiết.
+
+## Tóm Tắt
+
+- Record<Keys, Type>: Một utility type rất hữu ích trong TypeScript để định nghĩa các đối tượng với các khóa cụ thể và kiểu giá trị cố định.
+- Chắc Chắn về Kiểu: Đảm bảo rằng các thuộc tính và kiểu giá trị được chỉ định một cách chính xác.
